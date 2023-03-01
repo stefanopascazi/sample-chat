@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, Row, Col, Button, Container } from 'react-bootstrap'
 
-const Home = () => {
+const Home = ({socket}) => {
 
     const navigate = useNavigate();
     const [username, setUserName] = React.useState("");
@@ -11,6 +11,10 @@ const Home = () => {
         e.preventDefault();
 
         localStorage.setItem("username", username);
+        socket.emit("newUser", {
+            username: username,
+            socketID: socket.id
+        })
         navigate("/chat")
     }
 
@@ -22,7 +26,7 @@ const Home = () => {
                         <h2>Sign in to Open Chat</h2>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="text" placeholder="Enter username" onChange={(e) => setUserName(e.target.value)} />
+                            <Form.Control type="text" minLength={6} placeholder="Enter username" onChange={(e) => setUserName(e.target.value)} />
                         </Form.Group>
                         <div className='d-grid'>
                             <Button variant="primary" type="submit">
